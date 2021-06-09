@@ -1,0 +1,30 @@
+@baseUrl = http://localhost:8080/
+
+###
+Post {{baseUrl}}auth/register
+Content-Type: application/json
+
+{
+    "firstName": "rohit",
+    "lastName": "bhagat",
+    "email": "rohit@yopmail.com",
+    "password": "Hello@user"
+}
+
+###
+Post {{baseUrl}}auth/verify-email
+Content-Type: application/json
+
+{
+    "email": "rohitbhagattgh@gmail.com",
+    "otp": "400450"
+}
+
+###
+Post {{baseUrl}}auth/login
+Content-Type: application/json
+
+{
+    "email": "rohit@yopmail.com",
+    "password": "Hello@usergf"
+}

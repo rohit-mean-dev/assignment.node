@@ -1,0 +1,30 @@
+{
+  "name": "assignment.node",
+  "version": "1.0.0",
+  "description": "assignment management first node project",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rohit-mean-dev/assignment.node.git"
+  },
+  "author": "Rohit Bhagat",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rohit-mean-dev/assignment.node/issues"
+  },
+  "homepage": "https://github.com/rohit-mean-dev/assignment.node#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.11.1",
+    "http-errors": "^1.7.2",
+    "mongoose": "^5.12.12",
+    "morgan": "^1.10.0",
+    "nodemailer": "^6.6.1",
+    "nodemon": "^2.0.7"
+  }
+}
