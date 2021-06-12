@@ -47,7 +47,6 @@ const userSchema = new schema({
 userSchema.pre("save", async function (next) {
     try {
         if (this.isNew) {
-            console.log(this.password)
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(this.password, salt);
             this.password = hashedPassword;

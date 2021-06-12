@@ -6,12 +6,12 @@ const email = async (email, subject, body) => {
         let transporter = nodemailer.createTransport({
             service: "Yahoo",
             auth: {
-                user: "rohit.bhagat27@yahoo.com",
-                pass: "xvdwlznadtziyjnl",
+                user: process.env.EMAIL_ID,
+                pass: process.env.EMAIL_PASSWORD,
             },
         });
         const mailOptions = {
-            from: '"Rohit Bhagat 👻" <rohit.bhagat27@yahoo.com>', // sender address
+            from: `"Rohit Bhagat 👻" <${process.env.EMAIL_ID}>`, // sender address
             to: email, // list of receivers
             subject: subject, // Subject line
             html: body, // html body

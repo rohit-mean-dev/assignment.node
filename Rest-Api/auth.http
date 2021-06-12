@@ -1,4 +1,8 @@
 @baseUrl = http://localhost:8080/
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjM0ODkwNjQsImV4cCI6MTYyMzQ5NjI2NCwiYXVkIjoiNjBjMDc5OTk0NDI3MGY4YzNiYzg2M2RmIn0.Qn5k05jRBQZp5dLc7kLmXkwWgvnIUNMeGo1IPxVzcac
+
+# @baseUrl = https://assignment-mangement.herokuapp.com/
+# @accessToken = 
 
 ###
 Post {{baseUrl}}auth/register
@@ -7,7 +11,7 @@ Content-Type: application/json
 {
     "firstName": "rohit",
     "lastName": "bhagat",
-    "email": "rohit@yopmail.com",
+    "email": "rohit1@yopmail.com",
     "password": "Hello@user"
 }
 
@@ -16,8 +20,8 @@ Post {{baseUrl}}auth/verify-email
 Content-Type: application/json
 
 {
-    "email": "rohitbhagattgh@gmail.com",
-    "otp": "400450"
+    "email": "cm9oaXQxMkB5b3BtYWlsLmNvbQ==",
+    "otp": "NDAzMzcw"
 }
 
 ###
@@ -25,6 +29,7 @@ Post {{baseUrl}}auth/login
 Content-Type: application/json
 
 {
-    "email": "rohit@yopmail.com",
-    "password": "Hello@usergf"
+    "email": "rohit12@yopmail.com",
+    "password": "Hello@user"
 }
+###

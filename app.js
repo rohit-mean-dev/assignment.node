@@ -5,7 +5,7 @@ const createError = require("http-errors");
 require("dotenv").config();
 require('./helpers/db-connection')();
 const port = process.env.PORT || 3000;
-const errorHandler = require('./error/ErrorHandler');
+const errorHandler = require('./error/error-handler');
 const userRoute = require('./users/user.route');
 
 app.use(express.json())

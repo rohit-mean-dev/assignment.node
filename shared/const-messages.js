@@ -19,7 +19,8 @@ const messages = {
     alreadyEmailVerified: "Email already verified.",
     emailVerified: "Email verified successfully !!!",
     otpExpired: "Otp expired",
-    verifyEmailToLogin: "Verify your email to login"
+    verifyEmailToLogin: "Verify your email to login",
+    registrationEmailSubject: "Please verify your email address."
 };
 
 module.exports = messages;

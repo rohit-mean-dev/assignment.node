@@ -1,13 +1,13 @@
 const createError = require("http-errors");
 const { validationResult } = require("express-validator");
-const validationException = require("../error/ValidationError");
+const validationException = require("../error/validation-error");
 const successResponse = require("../helpers/success-response");
 const userModel = require('./user.model');
-const message = require("../shared/ConstMessages");
-const messages = require("../shared/ConstMessages");
+const message = require("../shared/const-messages");
 const { email } = require('../shared/email-sender');
 const { fileReader } = require('../shared/file-reader')
 const bcrypt = require("bcrypt");
+const { signAccessToken, signRefreshAccessToken } = require('../helpers/jwt-helper');
 
 const register = async (req, res, next) => {
     try {
@@ -20,16 +20,8 @@ const register = async (req, res, next) => {
             req.body.otp = ("" + Math.random()).substring(2, 8);
             req.body.otpGeneratedAt = req.body.createdAt;
             const user = new userModel(req.body);
-            const result = await user.save();
-            const salt = await bcrypt.genSalt(6);
-            const hashedEmail = Buffer.from(req.body.email).toString('base64');
-            const hashedOtp = Buffer.from(req.body.otp).toString('base64');
-            const newValues = {
-                '#user-name': `${req.body.firstName} ${req.body.lastName}`,
-                '#email-verify-link': `${process.env.EMAIL_VERIFY_LINK}?email=${hashedEmail}&otp=${hashedOtp}`
-            }
-            const mailContent = await fileReader("shared/email-verify.txt", newValues);
-            await email(req.body.email, 'Please verify your email address.', mailContent);
+            await user.save();
+            await registrationEmailHelper(req);
             res.status(201);
             successResponse(res, {}, message.registered);
         }
@@ -38,25 +30,30 @@ const register = async (req, res, next) => {
     }
 };
 
+const registrationEmailHelper = async (req) => {
+    const hashedEmail = Buffer.from(req.body.email).toString('base64');
+    const hashedOtp = Buffer.from(req.body.otp).toString('base64');
+    const newValues = {
+        '#user-name': `${req.body.firstName} ${req.body.lastName}`,
+        '#email-verify-link': `${process.env.EMAIL_VERIFY_LINK}?email=${hashedEmail}&otp=${hashedOtp}`
+    }
+    const mailContent = await fileReader("shared/email-verify.txt", newValues);
+    await email(req.body.email, message.registrationEmailSubject, mailContent);
+};
+
 const login = async (req, res, next) => {
     try {
         const errors = await validationResult(req);
         if (!errors.isEmpty()) {
-            next(createError.Unauthorized(messages.invalidCredential));
+            next(createError.Unauthorized(message.invalidCredential));
         } else {
             const user = await findByEmail(req.body.email);
             if (!user) {
-                next(createError.Unauthorized(messages.invalidCredential));
+                next(createError.Unauthorized(message.invalidCredential));
             } else if (user.isVerified === 1) {
                 const result = await compareHashedPassword(req.body.password, user.password);
                 if (result) {
-                    const finalResponse = {
-                        firstName: user.firstName,
-                        lastName: user.lastName,
-                        email: user.email,
-                        id: user._id
-                    };
-                    successResponse(res, finalResponse, message.loggedIn);
+                    sendLoginResponse(res, user);
                 }
             } else {
                 next(createError.Forbidden(message.verifyEmailToLogin));
@@ -65,6 +62,20 @@ const login = async (req, res, next) => {
     } catch (error) {
         next(error)
     }
+};
+
+const sendLoginResponse = async (res, user) => {
+    const accessToken = await signAccessToken(user._id);
+    const refreshToken = await signRefreshAccessToken(user._id);
+    const finalResponse = {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        id: user._id,
+        accessToken,
+        refreshToken
+    };
+    successResponse(res, finalResponse, message.loggedIn);
 };
 
 const compareHashedPassword = async (password, hashedPassword) => {

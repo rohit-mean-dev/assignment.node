@@ -1,6 +1,6 @@
 const { body } = require("express-validator");
 const { checkUniqueEmail } = require('./user.controller');
-const messages = require("../shared/ConstMessages");
+const messages = require("../shared/const-messages");
 
 const registerValidator = [
     body("firstName")
@@ -24,7 +24,6 @@ const registerValidator = [
         .bail()
         .custom(async (email) => {
             const user = await checkUniqueEmail(email);
-            console.log(user)
             if (user) {
                 throw new Error(messages.emailExist);
             }
